@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 
-export default function UserDetail({ params }: { params: { id: string } }) {
+export default function UserDetail(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const [buyAmount, setBuyAmount] = useState<string>("100");
   const [sellAmount, setSellAmount] = useState<string>("");
 
