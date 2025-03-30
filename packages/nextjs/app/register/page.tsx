@@ -2,15 +2,23 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRegisterUser } from "~~/hooks/contracts/core";
+import { zeroAddress } from "viem";
 
 export default function Register() {
   const [username, setUsername] = useState("");
   const [tokenName, setTokenName] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { registerUser } = useRegisterUser();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // 这里添加注册逻辑
-    console.log("注册信息：", { username, tokenName });
+    await registerUser({
+      username,
+      tokenTicker: tokenName,
+      tokenAddress: zeroAddress,  // Temporarily use zeroAddress
+    });
   };
 
   return (
