@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     QuickSortSolution: {
-      address: "0xd04ff4a75edd737a73e92b2f2274cb887d96e110",
+      address: "0x700b6a60ce7eaaea56f065753d8dcb9653dbad35",
       abi: [
         {
           type: "function",
@@ -30,11 +30,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743352540.json",
       deploymentScript: "Deploy.s.sol",
     },
     MergeSortSolution: {
-      address: "0xc6b8fbf96cf7bbe45576417ec2163acecfa88ecc",
+      address: "0xa15bb66138824a1c7167f5e85b957d04dd34e468",
       abi: [
         {
           type: "function",
@@ -57,11 +57,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743352540.json",
       deploymentScript: "Deploy.s.sol",
     },
     BubbleSortSolution: {
-      address: "0x29a79095352a718b3d7fe84e1f14e9f34a35598e",
+      address: "0xb19b36b1456e65e3a6d514d3f715f204bd59f431",
       abi: [
         {
           type: "function",
@@ -84,11 +84,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743352540.json",
       deploymentScript: "Deploy.s.sol",
     },
     QuickSortJudge: {
-      address: "0x6379ebd504941f50d5bfde9348b37593bd29c835",
+      address: "0x8ce361602b935680e8dec218b820ff5056beb7af",
       abi: [
         {
           type: "constructor",
@@ -186,11 +186,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743352540.json",
       deploymentScript: "Deploy.s.sol",
     },
     Problem: {
-      address: "0x5b3120d0da5fdcba7aef87a9c3c64829c1c0d76b",
+      address: "0xe1aa25618fa0c7a1cfdab5d6b456af611873b629",
       abi: [
         {
           type: "constructor",
@@ -608,11 +608,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743352540.json",
       deploymentScript: "Deploy.s.sol",
     },
     Core: {
-      address: "0x33b1b5aa9aa4da83a332f0bc5cac6a903fde5d92",
+      address: "0xe1da8919f262ee86f9be05059c9280142cf23f48",
       abi: [
         {
           type: "function",
@@ -1022,7 +1022,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743352540.json",
       deploymentScript: "Deploy.s.sol",
     },
   },

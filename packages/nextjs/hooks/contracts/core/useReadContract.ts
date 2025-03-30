@@ -2,11 +2,11 @@ import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { User } from "~~/types/contracts/core";
 
 export const useSubmissionCount = () => {
-    const { data } = useScaffoldReadContract({
+    const { data, isPending, error } = useScaffoldReadContract({
         contractName: "Core",
         functionName: "getSubmissionCount",
     })
-    return { data }
+    return { data, isPending, error }
 }
 
 export const useUserInfo = ({
@@ -14,19 +14,19 @@ export const useUserInfo = ({
 }: {
     userAddress: string;
 }) => {
-    const { data } = useScaffoldReadContract({
+    const { data, isPending, error } = useScaffoldReadContract({
         contractName: "Core",
         functionName: "getUser",
         args: [userAddress]
     })
-    return { data: data ? data as User : undefined }
+    return { data: data ? data as User : undefined, isPending, error }
 }
 
 export const useUserCount = () => {
-    const { data } = useScaffoldReadContract({
+    const { data, isPending, error } = useScaffoldReadContract({
         contractName: "Core",
         functionName: "getUserCount",
     })
-    return { data }
+    return { data, isPending, error }
 }
 
