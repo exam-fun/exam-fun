@@ -13,7 +13,7 @@ export interface SubmissionRecord {
     answerAddress: string;
     submitter: string;
     result: JudgeState;
-    gasUsage: number;
-    timestamp: number;
+    gasUsage: bigint;
+    timestamp: bigint;
     additionalInfo: string;
 }
