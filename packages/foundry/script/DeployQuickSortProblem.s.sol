@@ -9,7 +9,9 @@ import {QuickSortSolution} from "../contracts/Solutions/QuickSortSolution.sol";
 import {MergeSortSolution} from "../contracts/Solutions/MergeSortSolution.sol";
 import {BubbleSortSolution} from "../contracts/Solutions/BubbleSortSolution.sol";
 
-contract DeployQuickSortProblem is Script {
+import "./DeployHelpers.s.sol";
+
+contract DeployQuickSortProblem is ScaffoldETHDeploy {
     constructor() {}
 
     Problem sortProblem;
@@ -21,18 +23,19 @@ contract DeployQuickSortProblem is Script {
     uint256 public length = 1000;
     uint256 public gasLimit = 1000000;
 
-    string public problemContentUri = vm.readFile("./contracts/Problems/ProblemUri.txt");
+    string public problemContentUri =
+        vm.readFile("./contracts/Problems/ProblemUri.txt");
 
-    function run()
-        external
-        returns (Problem, QuickSortJudge, QuickSortSolution, MergeSortSolution, BubbleSortSolution)
-    {
-        std = new QuickSortSolution();
-        mergeSortSolution = new MergeSortSolution();
-        bubbleSortSolution = new BubbleSortSolution();
-        judge = new QuickSortJudge(std, 10, 1000, gasLimit);
-        sortProblem = new Problem(Problem.ProblemType.TRADITIONAL, "Quick Sort", problemContentUri, gasLimit);
-
-        return (sortProblem, judge, std, mergeSortSolution, bubbleSortSolution);
+    function run() external ScaffoldEthDeployerRunner {
+        new QuickSortSolution();
+        new MergeSortSolution();
+        new BubbleSortSolution();
+        new QuickSortJudge(std, 10, 1000, gasLimit);
+        new Problem(
+            Problem.ProblemType.TRADITIONAL,
+            "Quick Sort",
+            problemContentUri,
+            gasLimit
+        );
     }
 }

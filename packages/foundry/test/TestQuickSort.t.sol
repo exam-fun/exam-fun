@@ -9,7 +9,7 @@ import {QuickSortSolution} from "../contracts/Solutions/QuickSortSolution.sol";
 import {MergeSortSolution} from "../contracts/Solutions/MergeSortSolution.sol";
 import {BubbleSortSolution} from "../contracts/Solutions/BubbleSortSolution.sol";
 import {DeployQuickSortProblem} from "../script/DeployQuickSortProblem.s.sol";
-import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
+import {DevOpsTools} from "@foundry-devops/DevOpsTools.sol";
 
 contract TestQuickSort is Test {
     constructor() {}
@@ -30,7 +30,13 @@ contract TestQuickSort is Test {
 
     function setUp() public {
         deployer = new DeployQuickSortProblem();
-        (sortProblem, judge, std, mergeSortSolution, bubbleSortSolution) = deployer.run();
+        (
+            sortProblem,
+            judge,
+            std,
+            mergeSortSolution,
+            bubbleSortSolution
+        ) = deployer.run();
     }
 
     modifier prepareATestCase() {
@@ -90,13 +96,17 @@ contract TestQuickSort is Test {
     }
 
     function testMeasureGas() public {
-        uint256[] memory quickGasUsed = new uint256[](MEASURE_UPPER_BOUND+1);
-        uint256[] memory mergeGasUsed = new uint256[](MEASURE_UPPER_BOUND+1);
-        uint256[] memory bubbleGasUsed = new uint256[](MEASURE_UPPER_BOUND+1);
+        uint256[] memory quickGasUsed = new uint256[](MEASURE_UPPER_BOUND + 1);
+        uint256[] memory mergeGasUsed = new uint256[](MEASURE_UPPER_BOUND + 1);
+        uint256[] memory bubbleGasUsed = new uint256[](MEASURE_UPPER_BOUND + 1);
         uint256 gas1 = 0;
         uint256 gas2 = 0;
 
-        for (uint256 i = MEASURE_LOWER_BOUND; i <= MEASURE_UPPER_BOUND; i = i * 7 / 5) {
+        for (
+            uint256 i = MEASURE_LOWER_BOUND;
+            i <= MEASURE_UPPER_BOUND;
+            i = (i * 7) / 5
+        ) {
             arr = prepare(i);
 
             gas1 = gasleft();
@@ -115,7 +125,11 @@ contract TestQuickSort is Test {
             bubbleGasUsed[i] = gas1 - gas2;
         }
 
-        for (uint256 i = MEASURE_LOWER_BOUND; i <= MEASURE_UPPER_BOUND; i = i * 7 / 5) {
+        for (
+            uint256 i = MEASURE_LOWER_BOUND;
+            i <= MEASURE_UPPER_BOUND;
+            i = (i * 7) / 5
+        ) {
             // console.log(i);
             // console.log(quickGasUsed[i]);
             // console.log(mergeGasUsed[i]);
