@@ -2,7 +2,8 @@
 pragma solidity ^0.8.19;
 
 import "./DeployHelpers.s.sol";
-import { DeployYourContract } from "./DeployYourContract.s.sol";
+import {DeployYourContract} from "./DeployYourContract.s.sol";
+import {DeployQuickSortProblem} from "./DeployQuickSortProblem.s.sol";
 
 /**
  * @notice Main deployment script for all contracts
@@ -21,5 +22,8 @@ contract DeployScript is ScaffoldETHDeploy {
         // Deploy another contract
         // DeployMyContract myContract = new DeployMyContract();
         // myContract.run();
+
+        DeployQuickSortProblem deployQuickSortProblem = new DeployQuickSortProblem();
+        deployQuickSortProblem.run();
     }
 }

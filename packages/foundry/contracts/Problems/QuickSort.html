@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quick Sort</title>
+    <style>
+        /* From extension vscode.github */
+        /*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+        .vscode-dark img[src$=\#gh-light-mode-only],
+        .vscode-light img[src$=\#gh-dark-mode-only] {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet"
+        type="text/css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+    <style>
+        .task-list-item {
+            list-style-type: none;
+        }
+
+        .task-list-item-checkbox {
+            margin-left: -20px;
+            vertical-align: middle;
+            pointer-events: none;
+        }
+    </style>
+
+</head>
+
+<body class="vscode-body vscode-light">
+    <h1 id="description">Description</h1>
+    <p>Gas limit: 1000000 gas</p>
+    <p>You're give an <code>uint256[]</code> array, whose length is no more than <span class="katex"><span
+                class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+                    <semantics>
+                        <mrow>
+                            <mn>1000</mn>
+                        </mrow>
+                        <annotation encoding="application/x-tex">1000</annotation>
+                    </semantics>
+                </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                        style="height:0.6444em;"></span><span class="mord">1000</span></span></span></span> . Try to
+        sort it in the increasing manner.</p>
+    <h1 id="input">Input</h1>
+    <ul>
+        <li><code>uint256[] memory</code> : The array that you need to sort.</li>
+    </ul>
+    <h1 id="output">Output</h1>
+    <ul>
+        <li><code>uint256[] memory</code> : The array sorted in the increasing manner.</li>
+    </ul>
+    <h1 id="example">Example</h1>
+    <h2 id="input-1">Input</h2>
+    <pre><code>[114514, 1919810, 1, 1, 4, 5, 1, 4]
+</code></pre>
+    <h2 id="output-1">Output</h2>
+    <pre><code>[1, 1, 1, 4, 4, 5, 114514, 1919810]
+</code></pre>
+    <h1 id="note">Note</h1>
+    <p>Your contract should implement the interface below to interact with the judge.</p>
+    <pre><code class="language-solidity">interface QuickSortSolutionInterface is SolutionInterface {
+    function run(uint256[] memory) external payable returns (uint256[] memory);
+}
+</code></pre>
+    <p>Or you can also copy-paste the template below for convenience.</p>
+    <pre><code class="language-solidity">// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.18;
+
+interface QuickSortSolutionInterface {
+    function run(uint256[] memory) external payable returns (uint256[] memory);
+}
+
+contract MySolution is QuickSortSolutionInterface {
+    function run(uint256[] memory arr) external payable override returns (uint256[] memory) {
+        
+    }
+}
+
+</code></pre>
+
+    <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+
+</body>
+
+</html>
