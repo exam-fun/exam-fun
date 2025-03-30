@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     QuickSortSolution: {
-      address: "0xe1da8919f262ee86f9be05059c9280142cf23f48",
+      address: "0xd04ff4a75edd737a73e92b2f2274cb887d96e110",
       abi: [
         {
           type: "function",
@@ -30,11 +30,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743322504.json",
+      deploymentFile: "run-1743325935.json",
       deploymentScript: "Deploy.s.sol",
     },
     MergeSortSolution: {
-      address: "0x0c8e79f3534b00d9a3d4a856b665bf4ebc22f2ba",
+      address: "0xc6b8fbf96cf7bbe45576417ec2163acecfa88ecc",
       abi: [
         {
           type: "function",
@@ -57,11 +57,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743322504.json",
+      deploymentFile: "run-1743325935.json",
       deploymentScript: "Deploy.s.sol",
     },
     BubbleSortSolution: {
-      address: "0xed1db453c3156ff3155a97ad217b3087d5dc5f6e",
+      address: "0x29a79095352a718b3d7fe84e1f14e9f34a35598e",
       abi: [
         {
           type: "function",
@@ -84,11 +84,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743322504.json",
+      deploymentFile: "run-1743325935.json",
       deploymentScript: "Deploy.s.sol",
     },
     QuickSortJudge: {
-      address: "0xf7cd8fa9b94db2aa972023b379c7f72c65e4de9d",
+      address: "0x6379ebd504941f50d5bfde9348b37593bd29c835",
       abi: [
         {
           type: "constructor",
@@ -186,11 +186,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743322504.json",
+      deploymentFile: "run-1743325935.json",
       deploymentScript: "Deploy.s.sol",
     },
     Problem: {
-      address: "0x12975173b87f7595ee45dffb2ab812ece596bf84",
+      address: "0x5b3120d0da5fdcba7aef87a9c3c64829c1c0d76b",
       abi: [
         {
           type: "constructor",
@@ -608,7 +608,421 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743322504.json",
+      deploymentFile: "run-1743325935.json",
+      deploymentScript: "Deploy.s.sol",
+    },
+    Core: {
+      address: "0x33b1b5aa9aa4da83a332f0bc5cac6a903fde5d92",
+      abi: [
+        {
+          type: "function",
+          name: "getSubmission",
+          inputs: [
+            {
+              name: "index",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "tuple",
+              internalType: "struct Core.SubmissionRecord",
+              components: [
+                {
+                  name: "problemAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "answerAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "submitter",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "result",
+                  type: "uint8",
+                  internalType: "enum Judge.JudgeState",
+                },
+                {
+                  name: "gasUsage",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "timestamp",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "additionalInfo",
+                  type: "string",
+                  internalType: "string",
+                },
+              ],
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getSubmissionCount",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getUser",
+          inputs: [
+            {
+              name: "userAddress",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "tuple",
+              internalType: "struct Core.User",
+              components: [
+                {
+                  name: "username",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "tokenTicker",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "walletAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "tokenAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "isRegistered",
+                  type: "bool",
+                  internalType: "bool",
+                },
+              ],
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getUserCount",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getUserSubmissions",
+          inputs: [
+            {
+              name: "userAddress",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256[]",
+              internalType: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "registerUser",
+          inputs: [
+            {
+              name: "username",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "tokenTicker",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "tokenAddress",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "registeredUsers",
+          inputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "requestEvaluation",
+          inputs: [
+            {
+              name: "problemAddress",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "answerAddress",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "submissions",
+          inputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "problemAddress",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "answerAddress",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "submitter",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "result",
+              type: "uint8",
+              internalType: "enum Judge.JudgeState",
+            },
+            {
+              name: "gasUsage",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "timestamp",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "additionalInfo",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "userSubmissions",
+          inputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "users",
+          inputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "username",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "tokenTicker",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "walletAddress",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "tokenAddress",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "isRegistered",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "event",
+          name: "SubmissionRequested",
+          inputs: [
+            {
+              name: "userAddress",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "problemAddress",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "answerAddress",
+              type: "address",
+              indexed: false,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "SubmissionResult",
+          inputs: [
+            {
+              name: "userAddress",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "problemAddress",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "answerAddress",
+              type: "address",
+              indexed: false,
+              internalType: "address",
+            },
+            {
+              name: "result",
+              type: "uint8",
+              indexed: false,
+              internalType: "enum Judge.JudgeState",
+            },
+            {
+              name: "gasUsage",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "UserRegistered",
+          inputs: [
+            {
+              name: "userAddress",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "username",
+              type: "string",
+              indexed: false,
+              internalType: "string",
+            },
+            {
+              name: "tokenTicker",
+              type: "string",
+              indexed: false,
+              internalType: "string",
+            },
+          ],
+          anonymous: false,
+        },
+      ],
+      inheritedFunctions: {},
+      deploymentFile: "run-1743325935.json",
       deploymentScript: "Deploy.s.sol",
     },
   },
