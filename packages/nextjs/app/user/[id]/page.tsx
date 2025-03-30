@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 
-export default function Buy() {
+export default function UserDetail(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const [buyAmount, setBuyAmount] = useState<string>("100");
   const [sellAmount, setSellAmount] = useState<string>("");
 
@@ -16,7 +17,7 @@ export default function Buy() {
             <div className="w-12 h-12 rounded-full bg-gray-200">{/* 头像占位 */}</div>
             <div className="flex flex-col gap-2">
               <div className="flex gap-2">
-                <div className="border rounded px-10 py-1">ID</div>
+                <div className="border rounded px-10 py-1">{params.id}</div>
                 <div className="border rounded px-10 py-1">代币名称</div>
               </div>
               <div className="border rounded px-20 py-1 ">链上地址</div>
