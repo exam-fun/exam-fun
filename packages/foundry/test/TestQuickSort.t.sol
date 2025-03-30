@@ -29,14 +29,35 @@ contract TestQuickSort is Test {
     uint256 constant MEASURE_UPPER_BOUND = 1000;
 
     function setUp() public {
+        // Deploy contracts manually instead of relying on the return values
         deployer = new DeployQuickSortProblem();
-        (
-            sortProblem,
-            judge,
-            std,
-            mergeSortSolution,
-            bubbleSortSolution
-        ) = deployer.run();
+        
+        // Call run() but don't try to capture return values
+        deployer.run();
+        
+        // Deploy our own contracts for testing
+        std = new QuickSortSolution();
+        mergeSortSolution = new MergeSortSolution();
+        bubbleSortSolution = new BubbleSortSolution();
+        
+        uint256 gasLimit = 1000000;
+        judge = new QuickSortJudge(
+            QuickSortSolutionInterface(address(std)),
+            10,  // min array length
+            1000, // max array length
+            gasLimit
+        );
+        
+        sortProblem = new Problem(
+            Problem.ProblemType.TRADITIONAL,
+            "Quick Sort",
+            "Test Problem Content URI",
+            gasLimit
+        );
+        
+        // Bind judge to problem
+        vm.prank(address(this));
+        sortProblem.bindJudge(address(judge));
     }
 
     modifier prepareATestCase() {
@@ -142,14 +163,36 @@ contract TestQuickSort is Test {
     // Problem Tests     //
     ///////////////////////
     function testCanRevertIfJudgeNotBond() public {
+        // Create a new problem without binding a judge
+        Problem newProblem = new Problem(
+            Problem.ProblemType.TRADITIONAL,
+            "Test Problem",
+            "Test URI",
+            1000000
+        );
+        
+        // Now try to submit a solution, should revert with Problem__JudgeNotBond
         vm.expectRevert(Problem.Problem__JudgeNotBond.selector);
-        sortProblem.submitSolution(address(mergeSortSolution));
+        newProblem.submitSolution(address(mergeSortSolution));
     }
 
     function testCanRevertIfNotAuthorized() public {
+        // Create a new problem where this contract is the owner
+        Problem newProblem = new Problem(
+            Problem.ProblemType.TRADITIONAL,
+            "Test Problem",
+            "Test URI",
+            1000000
+        );
+        
+        // Try to bind judge from a non-authorized address
+        vm.prank(USER);
         vm.expectRevert(Problem.Problem__UnauthorizedAction.selector);
-        sortProblem.bindJudge(address(judge));
+        newProblem.bindJudge(address(judge));
+        
+        // Try to add editor from a non-authorized address
+        vm.prank(USER);
         vm.expectRevert(Problem.Problem__UnauthorizedAction.selector);
-        sortProblem.addAuthorizedEditor(USER);
+        newProblem.addAuthorizedEditor(USER);
     }
 }
