@@ -38,7 +38,7 @@ export const useRequestEvaluation = () => {
         answerAddress,
     }: {
         problemIndex: bigint;
-        answerAddress: `0x${string}`;
+        answerAddress: string;
     }) => {
         console.log("Executing requestEvaluation");
         console.table({ problemIndex, answerAddress });

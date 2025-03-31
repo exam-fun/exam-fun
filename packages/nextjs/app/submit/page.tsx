@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useAllProblems } from "~~/hooks/contracts/core";
+import { useAllProblems, useRequestEvaluation } from "~~/hooks/contracts/core";
 import { useScaffoldContract } from "~~/hooks/scaffold-eth";
+import { ProblemInfo } from "~~/types/contracts/core";
 
 // 定义测试结果类型
 type TestResult = {
@@ -12,17 +13,28 @@ type TestResult = {
 };
 
 export default function Submit() {
-  const [selectedQuestion, setSelectedQuestion] = useState("");
+  const [selectedQuestion, setSelectedQuestion] = useState<bigint>(-1n);
+  const [selectedProblem, setSelectedProblem] = useState<ProblemInfo | null>(null);
   const [answerAddr, setAnswerAddr] = useState("");
   const [showTestResult, setShowTestResult] = useState(false);
   // 模拟测试结果
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
   const { data: problems, isPending: problemsPending, error: problemsError } = useAllProblems();
+  const { requestEvaluation } = useRequestEvaluation();
 
-  // 模拟测试过程
+  // 模拟测试过程""""
   const runTests = async () => {
     // 这里应该是实际的测试逻辑
+    if (!selectedProblem) {
+      console.error("Problem not selected");
+      return;
+    }
+    await requestEvaluation({
+      problemIndex: selectedProblem?.index,
+      answerAddress: answerAddr,
+    })
+
     const mockResults: TestResult[] = [
       { status: "AC", message: "测试用例 1 通过", testCase: "输入: 1,2,3" },
       { status: "WA", message: "输出结果错误", testCase: "输入: 4,5,6" },
@@ -67,12 +79,12 @@ export default function Submit() {
                 <div
                   key={problem.problemAddress}
                   className={`flex items-center gap-2 p-3 text-black rounded-lg cursor-pointer hover:bg-green-500
-                                    ${selectedQuestion === problem.title ? "bg-green-500" : ""}`}
-                  onClick={() => setSelectedQuestion(problem.title)}
+                                    ${selectedProblem?.index === problem.index ? "bg-green-500" : ""}`}
+                  onClick={() => setSelectedProblem(problem)}
                 >
                   <div
                     className={`w-4 h-4 rounded-full border text-black
-                                    ${selectedQuestion === problem.title ? "bg-green-500 border-green-500" : "border-green-500"}`}
+                                    ${selectedProblem?.index === problem.index ? "bg-green-500 border-green-500" : "border-green-500"}`}
                   />
                   <span className="text-2xl">{problem.title}</span>
                 </div>
@@ -87,7 +99,7 @@ export default function Submit() {
             <div>
               <h2 className="text-3xl font-bold mb-4 text-black">选择的题目的详情：</h2>
               <div className="min-h-[200px] text-xl p-4 bg-black text-grey rounded-lg">
-                {selectedQuestion ? selectedQuestion + "的详细内容" : "请选择一个题目"}
+                {selectedProblem?.title ? selectedProblem.title + "的详细内容" : "请选择一个题目"}
               </div>
             </div>
 
