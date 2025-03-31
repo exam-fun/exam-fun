@@ -3,16 +3,18 @@
 import Link from "next/link";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
+  const router = useRouter();
 
   // 模拟代币数据
   const tokens = [
     {
       id: "1",
       name: "Token1",
-      address: "0x123...",
+      address: connectedAddress,
       price: "¥0.0001",
       marketCap: "¥3.16m",
       volume: "$105k",
@@ -21,7 +23,7 @@ const Home: NextPage = () => {
     {
       id: "2",
       name: "Token2",
-      address: "0x456...",
+      address: connectedAddress,
       price: "¥0.0002",
       marketCap: "¥6.32m",
       volume: "$105k",
@@ -30,7 +32,7 @@ const Home: NextPage = () => {
     {
       id: "3",
       name: "Token3",
-      address: "0x789...",
+      address: connectedAddress,
       price: "¥0.0003",
       marketCap: "¥9.48m",
       volume: "$105k",
@@ -54,7 +56,12 @@ const Home: NextPage = () => {
               <span className="px-1 py-1 border rounded bg-[#00ff40] text-xl text-black">涨跌24h</span>
             </div>
             {tokens.map(token => (
-              <div key={token.id} className="flex items-center gap-4 p-4 border-b">
+              <div
+                key={token.id}
+                className="flex items-center gap-4 p-4 border-b hover:bg-gray-500"
+                onClick={() => {
+                  router.push(`/user/${token.address}`);
+                }}>
                 <div className="w-12 h-12 rounded-full bg-gray-200" /> {/* 头像 */}
                 <div className="flex-1">
                   <div className="flex gap-2 mb-2">

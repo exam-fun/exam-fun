@@ -2,15 +2,34 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRegisterUser } from "~~/hooks/contracts/core";
+import { zeroAddress } from "viem";
+import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [username, setUsername] = useState("");
   const [tokenName, setTokenName] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+  const { registerUser } = useRegisterUser();
+  const { address } = useAccount();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // 这里添加注册逻辑
-    console.log("注册信息：", { username, tokenName });
+
+    try {
+      await registerUser({
+        username,
+        tokenTicker: tokenName,
+        tokenAddress: zeroAddress,  // Temporarily use zeroAddress
+      });
+
+      router.push(`/user/${address}`);
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
   };
 
   return (

@@ -1,12 +1,12 @@
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
-import { User } from "~~/types/contracts/core";
+import { ProblemInfo, SubmissionRecord, User } from "~~/types/contracts/core";
 
 export const useSubmissionCount = () => {
-    const { data } = useScaffoldReadContract({
+    const { data, isPending, error } = useScaffoldReadContract({
         contractName: "Core",
         functionName: "getSubmissionCount",
     })
-    return { data }
+    return { data, isPending, error }
 }
 
 export const useUserInfo = ({
@@ -14,19 +14,79 @@ export const useUserInfo = ({
 }: {
     userAddress: string;
 }) => {
-    const { data } = useScaffoldReadContract({
+    const { data, isPending, error } = useScaffoldReadContract({
         contractName: "Core",
         functionName: "getUser",
         args: [userAddress]
     })
-    return { data: data ? data as User : undefined }
+    return { data: data ? data as User : undefined, isPending, error }
 }
 
 export const useUserCount = () => {
-    const { data } = useScaffoldReadContract({
+    const { data, isPending, error } = useScaffoldReadContract({
         contractName: "Core",
         functionName: "getUserCount",
     })
-    return { data }
+    return { data, isPending, error }
 }
 
+export const useSubmission = ({
+    submissionIndex
+}: {
+    submissionIndex: bigint;
+}) => {
+    const { data, isPending, error } = useScaffoldReadContract({
+        contractName: "Core",
+        functionName: "getSubmission",
+        args: [submissionIndex]
+    })
+    return { data: data ? data as SubmissionRecord : undefined, isPending, error }
+}
+
+export const useUserSubmissionIndices = ({
+    userAddress
+}: {
+    userAddress: string;
+}) => {
+    const { data, isPending, error } = useScaffoldReadContract({
+        contractName: "Core",
+        functionName: "getUserSubmissions",
+        args: [userAddress]
+    })
+    return { data, isPending, error }
+}
+
+// New hooks for Problem functionality
+
+export const useProblemCount = () => {
+    const { data, isPending, error } = useScaffoldReadContract({
+        contractName: "Core",
+        functionName: "getProblemCount",
+    })
+    return { data, isPending, error }
+}
+
+export const useProblem = ({
+    problemIndex
+}: {
+    problemIndex: bigint;
+}) => {
+    const { data, isPending, error } = useScaffoldReadContract({
+        contractName: "Core",
+        functionName: "getProblem",
+        args: [problemIndex]
+    })
+    return { data: data ? data as ProblemInfo : undefined, isPending, error }
+}
+
+export const useAllProblems = () => {
+    const { data, isPending, error } = useScaffoldReadContract({
+        contractName: "Core",
+        functionName: "getAllProblems",
+    })
+    return {
+        data: data ? data.map((d) => d as ProblemInfo) : undefined,
+        isPending,
+        error,
+    }
+}

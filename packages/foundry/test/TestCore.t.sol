@@ -11,9 +11,10 @@ import {QuickSortSolution} from "../contracts/Solutions/QuickSortSolution.sol";
 
 contract TestCore is Test {
     Core core;
-    Problem sortProblem;
     QuickSortJudge judge;
     QuickSortSolution stdSolution;
+    uint256 problemIndex;
+    address problemAddress;
 
     // Test accounts
     address public ADMIN = makeAddr("admin");
@@ -29,33 +30,37 @@ contract TestCore is Test {
     string public constant USER2_TOKEN_TICKER = "BOB";
     address public constant USER2_TOKEN_ADDRESS = address(1); // Mock token address
 
+    // Problem data
+    string public constant PROBLEM_TITLE = "Quick Sort";
+    string public constant PROBLEM_CONTENT_URI = "Test Problem Content URI";
+    uint256 public constant PROBLEM_GAS_LIMIT = 1000000;
+
     function setUp() public {
         // Deploy Core contract
         vm.startPrank(ADMIN);
         core = new Core();
         vm.stopPrank();
 
-        // Deploy QuickSort problem and related contracts
+        // Deploy QuickSort solution
         stdSolution = new QuickSortSolution();
 
-        uint256 gasLimit = 1000000;
+        // Deploy QuickSort judge
         judge = new QuickSortJudge(
             QuickSortSolutionInterface(address(stdSolution)),
             10, // min array length
             1000, // max array length
-            gasLimit
+            PROBLEM_GAS_LIMIT
         );
 
-        sortProblem = new Problem(
+        // Register problem through Core
+        vm.prank(ADMIN);
+        (problemAddress, problemIndex) = core.registerProblem(
             Problem.ProblemType.TRADITIONAL,
-            "Quick Sort",
-            "Test Problem Content URI",
-            gasLimit
+            PROBLEM_TITLE,
+            PROBLEM_CONTENT_URI,
+            PROBLEM_GAS_LIMIT,
+            address(judge)
         );
-
-        // Bind judge to problem
-        vm.prank(address(this));
-        sortProblem.bindJudge(address(judge));
 
         // Fund test accounts
         vm.deal(USER1, 10 ether);
@@ -121,6 +126,72 @@ contract TestCore is Test {
     }
 
     /*//////////////////////////////////////////////////////////////
+                        PROBLEM REGISTRATION TESTS
+    //////////////////////////////////////////////////////////////*/
+
+    function testProblemRegistration() public view {
+        // Verify problem was registered in setup
+        assertEq(core.getProblemCount(), 1);
+
+        // Verify problem address
+        Core.ProblemInfo memory problemInfo = core.getProblem(problemIndex);
+        assertEq(problemInfo.problemAddress, problemAddress);
+
+        // Verify problem details
+        assertEq(problemInfo.title, PROBLEM_TITLE);
+        assertEq(problemInfo.contentUri, PROBLEM_CONTENT_URI);
+        assertEq(problemInfo.gasLimit, PROBLEM_GAS_LIMIT);
+        assertEq(problemInfo.judgeAddress, address(judge));
+        assertEq(uint(problemInfo.problemType), uint(Problem.ProblemType.TRADITIONAL));
+        assertEq(problemInfo.index, problemIndex);
+    }
+
+    function testRegisterMultipleProblems() public {
+        // Register a second problem
+        vm.prank(ADMIN);
+        (address problem2Address, uint256 problem2Index) = core.registerProblem(
+            Problem.ProblemType.INTERACTIVE,
+            "Another Problem",
+            "Another Content URI",
+            500000,
+            address(judge)
+        );
+
+        // Verify problem count
+        assertEq(core.getProblemCount(), 2);
+
+        // Verify problem indices
+        assertEq(problemIndex, 0);
+        assertEq(problem2Index, 1);
+
+        // Verify getAllProblems
+        Core.ProblemInfo[] memory allProblems = core.getAllProblems();
+        assertEq(allProblems.length, 2);
+        assertEq(allProblems[0].problemAddress, problemAddress);
+        assertEq(allProblems[1].problemAddress, problem2Address);
+        
+        // Verify second problem details
+        assertEq(allProblems[1].title, "Another Problem");
+        assertEq(allProblems[1].contentUri, "Another Content URI");
+        assertEq(allProblems[1].gasLimit, 500000);
+        assertEq(uint(allProblems[1].problemType), uint(Problem.ProblemType.INTERACTIVE));
+        assertEq(allProblems[0].index, 0);
+        assertEq(allProblems[1].index, 1);
+    }
+
+    function testInvalidJudgeAddress() public {
+        vm.prank(ADMIN);
+        vm.expectRevert("Core: Invalid judge address");
+        core.registerProblem(
+            Problem.ProblemType.TRADITIONAL,
+            "Invalid Judge Problem",
+            "Content URI",
+            100000,
+            address(0)
+        );
+    }
+
+    /*//////////////////////////////////////////////////////////////
                         SUBMISSION EVALUATION TESTS
     //////////////////////////////////////////////////////////////*/
 
@@ -131,14 +202,14 @@ contract TestCore is Test {
 
         // Submit solution
         vm.prank(USER1);
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
 
         // Verify submission count
         assertEq(core.getSubmissionCount(), 1);
 
         // Verify submission record
         Core.SubmissionRecord memory record = core.getSubmission(0);
-        assertEq(record.problemAddress, address(sortProblem));
+        assertEq(record.problemAddress, problemAddress);
         assertEq(record.answerAddress, address(stdSolution));
         assertEq(record.submitter, USER1);
         assertEq(uint(record.result), uint(Judge.JudgeState.RUNTIME_ERROR)); // Expecting RUNTIME_ERROR since the solution isn't properly set up in test
@@ -149,18 +220,18 @@ contract TestCore is Test {
         // Try to submit without registration
         vm.prank(USER1);
         vm.expectRevert("Core: User not registered");
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
     }
 
-    function testInvalidProblemAddress() public {
+    function testInvalidProblemIndex() public {
         // Register USER1
         vm.prank(USER1);
         core.registerUser(USER1_NAME, USER1_TOKEN_TICKER, USER1_TOKEN_ADDRESS);
 
-        // Try to submit with invalid problem address
+        // Try to submit with invalid problem index
         vm.prank(USER1);
-        vm.expectRevert("Core: Invalid problem address");
-        core.requestEvaluation(address(0), address(stdSolution));
+        vm.expectRevert("Core: Invalid problem index");
+        core.requestEvaluation(999, address(stdSolution));
     }
 
     function testInvalidAnswerAddress() public {
@@ -171,7 +242,7 @@ contract TestCore is Test {
         // Try to submit with invalid answer address
         vm.prank(USER1);
         vm.expectRevert("Core: Invalid answer address");
-        core.requestEvaluation(address(sortProblem), address(0));
+        core.requestEvaluation(problemIndex, address(0));
     }
 
     function testMultipleSubmissions() public {
@@ -181,9 +252,9 @@ contract TestCore is Test {
 
         // Submit solution multiple times
         vm.startPrank(USER1);
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
         vm.stopPrank();
 
         // Verify submission count
@@ -211,13 +282,13 @@ contract TestCore is Test {
 
         // USER1 submits twice
         vm.startPrank(USER1);
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
         vm.stopPrank();
 
         // USER2 submits once
         vm.prank(USER2);
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
 
         // Verify USER1 submissions
         uint256[] memory user1Subs = core.getUserSubmissions(USER1);
@@ -236,7 +307,7 @@ contract TestCore is Test {
 
         // Submit solution
         vm.prank(USER1);
-        core.requestEvaluation(address(sortProblem), address(stdSolution));
+        core.requestEvaluation(problemIndex, address(stdSolution));
 
         // Try to get non-existent submission
         vm.expectRevert("Core: Invalid submission index");
@@ -245,5 +316,21 @@ contract TestCore is Test {
         // Get valid submission
         Core.SubmissionRecord memory record = core.getSubmission(0);
         assertEq(record.submitter, USER1);
+    }
+
+    function testGetProblem() public {
+        // Try to get non-existent problem
+        vm.expectRevert("Core: Invalid problem index");
+        core.getProblem(999);
+
+        // Get valid problem
+        Core.ProblemInfo memory problemInfo = core.getProblem(problemIndex);
+        assertEq(problemInfo.problemAddress, problemAddress);
+        assertEq(problemInfo.title, PROBLEM_TITLE);
+        assertEq(problemInfo.contentUri, PROBLEM_CONTENT_URI);
+        assertEq(problemInfo.gasLimit, PROBLEM_GAS_LIMIT);
+        assertEq(problemInfo.judgeAddress, address(judge));
+        assertEq(uint(problemInfo.problemType), uint(Problem.ProblemType.TRADITIONAL));
+        assertEq(problemInfo.index, problemIndex);
     }
 }

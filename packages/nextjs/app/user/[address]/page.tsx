@@ -1,11 +1,28 @@
 "use client";
 
-import { use, useState } from "react";
+import { useState, use } from "react";
+import { useUserInfo } from "~~/hooks/contracts/core";
 
-export default function UserDetail(props: { params: Promise<{ id: string }> }) {
+export default function UserDetail(props: { params: Promise<{ address: string }> }) {
   const params = use(props.params);
   const [buyAmount, setBuyAmount] = useState<string>("100");
   const [sellAmount, setSellAmount] = useState<string>("");
+
+  const { data: userInfo, isPending, error } = useUserInfo({ userAddress: params.address });
+
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    console.error("Error fetching user info:", error);
+    return <div>Error: {error.name}</div>;
+  }
+
+  // Check if user is registered
+  if (!userInfo || !userInfo.isRegistered) {
+    return <div className="container mx-auto p-4">User not registered</div>;
+  }
 
   return (
     <div className="container mx-auto p-4 flex flex-row bg-black">
@@ -17,10 +34,10 @@ export default function UserDetail(props: { params: Promise<{ id: string }> }) {
             <div className="w-12 h-12 rounded-full bg-gray-200">{/* 头像占位 */}</div>
             <div className="flex flex-col gap-2">
               <div className="flex gap-2">
-                <div className="border rounded px-10 py-1 text-xl">{params.id}</div>
-                <div className="border rounded px-10 py-1 text-xl ">代币名称</div>
+                <div className="border rounded px-10 py-1 text-xl">{userInfo?.username}</div>
+                <div className="border rounded px-10 py-1 text-xl ">$ {userInfo?.tokenTicker}</div>
               </div>
-              <div className="border rounded px-20 py-1 text-xl">链上地址</div>
+              <div className="border rounded px-20 py-1 text-xl">{params.address}</div>
             </div>
           </div>
           <div className="text-right">

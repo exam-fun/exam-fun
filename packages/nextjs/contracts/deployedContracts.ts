@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     QuickSortSolution: {
-      address: "0xd04ff4a75edd737a73e92b2f2274cb887d96e110",
+      address: "0x2c4b93b614ddbfaf0807e8f4ca982e9f9c2e2aa4",
       abi: [
         {
           type: "function",
@@ -30,11 +30,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743385401.json",
       deploymentScript: "Deploy.s.sol",
     },
     MergeSortSolution: {
-      address: "0xc6b8fbf96cf7bbe45576417ec2163acecfa88ecc",
+      address: "0x04fc820176617a99ae134904935bc854b2e51628",
       abi: [
         {
           type: "function",
@@ -57,11 +57,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743385401.json",
       deploymentScript: "Deploy.s.sol",
     },
     BubbleSortSolution: {
-      address: "0x29a79095352a718b3d7fe84e1f14e9f34a35598e",
+      address: "0xf1078fd568ad76e49e6f88d1ff485402a086976b",
       abi: [
         {
           type: "function",
@@ -84,11 +84,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743385401.json",
       deploymentScript: "Deploy.s.sol",
     },
     QuickSortJudge: {
-      address: "0x6379ebd504941f50d5bfde9348b37593bd29c835",
+      address: "0xe8f76a822b57b973c7a89006092364fff8f69040",
       abi: [
         {
           type: "constructor",
@@ -186,11 +186,11 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743385401.json",
       deploymentScript: "Deploy.s.sol",
     },
     Problem: {
-      address: "0x5b3120d0da5fdcba7aef87a9c3c64829c1c0d76b",
+      address: "0x4e85dc48a70da1298489d5b6fc2492767d98f384",
       abi: [
         {
           type: "constructor",
@@ -608,12 +608,131 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743385401.json",
       deploymentScript: "Deploy.s.sol",
     },
     Core: {
-      address: "0x33b1b5aa9aa4da83a332f0bc5cac6a903fde5d92",
+      address: "0x4d8e02bbfcf205828a8352af4376b165e123d7b0",
       abi: [
+        {
+          type: "function",
+          name: "getAllProblems",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "tuple[]",
+              internalType: "struct Core.ProblemInfo[]",
+              components: [
+                {
+                  name: "problemAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "problemType",
+                  type: "uint8",
+                  internalType: "enum Problem.ProblemType",
+                },
+                {
+                  name: "title",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "contentUri",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "gasLimit",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "judgeAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "index",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+              ],
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getProblem",
+          inputs: [
+            {
+              name: "index",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "tuple",
+              internalType: "struct Core.ProblemInfo",
+              components: [
+                {
+                  name: "problemAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "problemType",
+                  type: "uint8",
+                  internalType: "enum Problem.ProblemType",
+                },
+                {
+                  name: "title",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "contentUri",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "gasLimit",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "judgeAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "index",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+              ],
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getProblemCount",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
         {
           type: "function",
           name: "getSubmission",
@@ -763,6 +882,69 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "problems",
+          inputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract Problem",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "registerProblem",
+          inputs: [
+            {
+              name: "problemType",
+              type: "uint8",
+              internalType: "enum Problem.ProblemType",
+            },
+            {
+              name: "title",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "contentUri",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "gasLimit",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "judgeAddress",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "problemAddress",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "problemIndex",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
           name: "registerUser",
           inputs: [
             {
@@ -808,9 +990,9 @@ const deployedContracts = {
           name: "requestEvaluation",
           inputs: [
             {
-              name: "problemAddress",
-              type: "address",
-              internalType: "address",
+              name: "problemIndex",
+              type: "uint256",
+              internalType: "uint256",
             },
             {
               name: "answerAddress",
@@ -818,7 +1000,50 @@ const deployedContracts = {
               internalType: "address",
             },
           ],
-          outputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "tuple",
+              internalType: "struct Core.SubmissionRecord",
+              components: [
+                {
+                  name: "problemAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "answerAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "submitter",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "result",
+                  type: "uint8",
+                  internalType: "enum Judge.JudgeState",
+                },
+                {
+                  name: "gasUsage",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "timestamp",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "additionalInfo",
+                  type: "string",
+                  internalType: "string",
+                },
+              ],
+            },
+          ],
           stateMutability: "nonpayable",
         },
         {
@@ -935,6 +1160,31 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "ProblemRegistered",
+          inputs: [
+            {
+              name: "problemAddress",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "judgeAddress",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "problemIndex",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
           name: "SubmissionRequested",
           inputs: [
             {
@@ -1022,7 +1272,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deploymentFile: "run-1743325935.json",
+      deploymentFile: "run-1743385401.json",
       deploymentScript: "Deploy.s.sol",
     },
   },

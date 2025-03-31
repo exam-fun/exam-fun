@@ -29,12 +29,26 @@ contract Core {
         string additionalInfo;
     }
 
+    // Define a struct to hold problem information
+    struct ProblemInfo {
+        address problemAddress;
+        Problem.ProblemType problemType;
+        string title;
+        string contentUri;
+        uint256 gasLimit;
+        address judgeAddress;
+        uint256 index; // Index in the problems array
+    }
+
     // State variables
     mapping(address => User) public users;
     address[] public registeredUsers;
 
     SubmissionRecord[] public submissions;
     mapping(address => uint256[]) public userSubmissions; // user address => submission indices
+
+    // Problem registry
+    Problem[] public problems;
 
     // Events
     event UserRegistered(
@@ -53,6 +67,11 @@ contract Core {
         address answerAddress,
         Judge.JudgeState result,
         uint256 gasUsage
+    );
+    event ProblemRegistered(
+        address indexed problemAddress,
+        address indexed judgeAddress,
+        uint256 indexed problemIndex
     );
 
     // Modifiers
@@ -92,21 +111,56 @@ contract Core {
     }
 
     /**
+     * @dev Register a Problem and bind a judge to it
+     * @param problemType Type of the problem (TRADITIONAL, INTERACTIVE)
+     * @param title Title of the problem
+     * @param contentUri URI pointing to the problem content
+     * @param gasLimit Gas limit for the problem
+     * @param judgeAddress Address of the judge contract
+     * @return problemAddress Address of the created problem contract
+     * @return problemIndex Index of the registered problem
+     */
+    function registerProblem(
+        Problem.ProblemType problemType,
+        string memory title,
+        string memory contentUri,
+        uint256 gasLimit,
+        address judgeAddress
+    ) external returns (address problemAddress, uint256 problemIndex) {
+        require(judgeAddress != address(0), "Core: Invalid judge address");
+
+        // Create a new Problem contract
+        Problem problem = new Problem(problemType, title, contentUri, gasLimit);
+        problemAddress = address(problem);
+
+        // Bind the judge to the problem
+        problem.bindJudge(judgeAddress);
+
+        // Add the problem to the list
+        problems.push(problem);
+        problemIndex = problems.length - 1;
+
+        emit ProblemRegistered(problemAddress, judgeAddress, problemIndex);
+
+        return (problemAddress, problemIndex);
+    }
+
+    /**
      * @dev Request evaluation of a solution
-     * @param problemAddress Address of the problem contract
+     * @param problemIndex Index of the problem in the problems array
      * @param answerAddress Address of the solution contract
      */
     function requestEvaluation(
-        address problemAddress,
+        uint256 problemIndex,
         address answerAddress
-    ) external onlyRegisteredUser {
-        require(problemAddress != address(0), "Core: Invalid problem address");
+    ) external onlyRegisteredUser returns (SubmissionRecord memory) {
+        require(problemIndex < problems.length, "Core: Invalid problem index");
         require(answerAddress != address(0), "Core: Invalid answer address");
 
-        emit SubmissionRequested(msg.sender, problemAddress, answerAddress);
+        Problem problem = problems[problemIndex];
+        address problemAddress = address(problem);
 
-        // Call the problem contract to evaluate the solution
-        Problem problem = Problem(problemAddress);
+        emit SubmissionRequested(msg.sender, problemAddress, answerAddress);
 
         // Store submission record before actual submission to track attempts
         uint256 submissionIndex = submissions.length;
@@ -140,6 +194,8 @@ contract Core {
                 submission.judgeResult.judgeState,
                 submission.judgeResult.gasUsed
             );
+
+            return record;
         } catch {
             // If submission fails, record it as a runtime error
             SubmissionRecord memory record = SubmissionRecord({
@@ -162,6 +218,8 @@ contract Core {
                 Judge.JudgeState.RUNTIME_ERROR,
                 0
             );
+
+            return record;
         }
     }
 
@@ -212,5 +270,56 @@ contract Core {
         address userAddress
     ) external view returns (uint256[] memory) {
         return userSubmissions[userAddress];
+    }
+
+    /**
+     * @dev Get total number of registered problems
+     * @return Number of problems
+     */
+    function getProblemCount() external view returns (uint256) {
+        return problems.length;
+    }
+
+    /**
+     * @dev Get problem by index
+     * @param index Index of the problem
+     * @return Problem information including contract address and details
+     */
+    function getProblem(uint256 index) external view returns (ProblemInfo memory) {
+        require(index < problems.length, "Core: Invalid problem index");
+        Problem problem = problems[index];
+        
+        return ProblemInfo({
+            problemAddress: address(problem),
+            problemType: problem.s_problemType(),
+            title: problem.getTitle(),
+            contentUri: problem.getContentUri(),
+            gasLimit: problem.getGasLimit(),
+            judgeAddress: problem.getBondJudgeAddress(),
+            index: index
+        });
+    }
+
+    /**
+     * @dev Get all registered problems
+     * @return Array of problem information including addresses and details
+     */
+    function getAllProblems() external view returns (ProblemInfo[] memory) {
+        ProblemInfo[] memory problemInfos = new ProblemInfo[](problems.length);
+        
+        for (uint256 i = 0; i < problems.length; i++) {
+            Problem problem = problems[i];
+            problemInfos[i] = ProblemInfo({
+                problemAddress: address(problem),
+                problemType: problem.s_problemType(),
+                title: problem.getTitle(),
+                contentUri: problem.getContentUri(),
+                gasLimit: problem.getGasLimit(),
+                judgeAddress: problem.getBondJudgeAddress(),
+                index: i
+            });
+        }
+        
+        return problemInfos;
     }
 }
