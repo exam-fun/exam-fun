@@ -45,13 +45,13 @@ export default function Submit() {
   const getStatusStyle = (status: TestResult["status"]) => {
     switch (status) {
       case "AC":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-black text-green-500 border-green-500";
       case "WA":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-black text-red-500 border-red-500";
       case "RE":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+        return "bg-black text-yellow-500 border-yellow-500";
       case "GLE":
-        return "bg-orange-100 text-orange-800 border-orange-200";
+        return "bg-black text-orange-500 border-orange-500";
     }
   };
 
@@ -59,45 +59,45 @@ export default function Submit() {
     <div className="container mx-auto p-6">
       <div className="flex gap-6">
         {/* 左侧题目列表 */}
-        <div className="w-1/3 bg-white rounded-lg p-6 shadow-md">
-          <h2 className="text-xl font-bold mb-4">题目列表</h2>
+        <div className="w-1/3 bg-[#009828] rounded-lg p-6 shadow-md">
+          <h2 className="text-4xl font-bold mb-4 text-black">题目列表</h2>
           <div className="space-y-3">
             {questions.map(question => (
               <div
                 key={question.id}
-                className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer hover:bg-gray-100 
-                                    ${selectedQuestion === question.title ? "bg-gray-100" : ""}`}
+                className={`flex items-center gap-2 p-3 text-black rounded-lg cursor-pointer hover:bg-green-500
+                                    ${selectedQuestion === question.title ? "bg-green-500" : ""}`}
                 onClick={() => setSelectedQuestion(question.title)}
               >
                 <div
-                  className={`w-4 h-4 rounded-full border 
-                                    ${selectedQuestion === question.title ? "bg-blue-500 border-blue-500" : "border-gray-400"}`}
+                  className={`w-4 h-4 rounded-full border text-black
+                                    ${selectedQuestion === question.title ? "bg-green-500 border-green-500" : "border-green-500"}`}
                 />
-                <span>{question.title}</span>
+                <span className="text-2xl">{question.title}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* 右侧答题区域 */}
-        <div className="flex-1 bg-white rounded-lg p-6 shadow-md">
+        <div className="flex-1 bg-[#009828] rounded-lg p-6 shadow-md">
           <div className="space-y-6">
             {/* 题目详情 */}
             <div>
-              <h2 className="text-xl font-bold mb-4">选择的题目的详情：</h2>
-              <div className="min-h-[200px] p-4 bg-gray-50 rounded-lg">
+              <h2 className="text-3xl font-bold mb-4 text-black">选择的题目的详情：</h2>
+              <div className="min-h-[200px] text-xl p-4 bg-black text-grey rounded-lg">
                 {selectedQuestion ? selectedQuestion + "的详细内容" : "请选择一个题目"}
               </div>
             </div>
 
             {/* 回答区域 */}
             <div>
-              <h2 className="text-xl font-bold mb-4">回答区域：</h2>
+              <h2 className="text-3xl font-bold mb-4 text-black">回答区域：</h2>
               <textarea
                 value={answer}
                 onChange={e => setAnswer(e.target.value)}
-                className="w-full min-h-[200px] p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="请在这里输入你的答案..."
+                className="w-full min-h-[200px] text-xl p-4 border rounded-lg bg-black text-[#009829] focus:ring-[#009829] focus:border-[#009829]"
+                placeholder="请在这里输入你的答案...[提示：请前往REMIX IDE进行编写，部署之后将合约地址粘贴到此处]"
               />
             </div>
 
@@ -105,7 +105,7 @@ export default function Submit() {
             <div className="flex justify-end">
               <button
                 onClick={handleSubmit}
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+                className="px-6 py-2 text-2xl bg-[#00ff40] text-black rounded-lg hover:bg-[#00ff40] transition duration-200"
               >
                 确认答题
               </button>
@@ -117,9 +117,9 @@ export default function Submit() {
       {/* 测试结果弹窗 */}
       {showTestResult && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+          <div className="bg-black rounded-lg p-6 max-w-2xl w-full mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">测试结果</h3>
+              <h3 className="text-xl font-bold text-[#00ff40]">测试结果</h3>
               <button onClick={() => setShowTestResult(false)} className="text-gray-500 hover:text-gray-700">
                 ✕
               </button>
@@ -144,7 +144,7 @@ export default function Submit() {
               <button onClick={() => setShowTestResult(false)} className="px-4 py-2 border rounded-lg hover:bg-gray-50">
                 关闭
               </button>
-              <button onClick={runTests} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+              <button onClick={runTests} className="px-4 py-2 text-black bg-[#009828] rounded-lg hover:bg-[#00ff40]">
                 重新测试
               </button>
             </div>
