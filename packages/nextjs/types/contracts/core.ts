@@ -19,6 +19,7 @@ export interface SubmissionRecord {
 }
 
 export interface ProblemInfo {
+    index: bigint;
     problemAddress: string;
     problemType: number;
     title: string;

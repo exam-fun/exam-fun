@@ -37,6 +37,7 @@ contract Core {
         string contentUri;
         uint256 gasLimit;
         address judgeAddress;
+        uint256 index; // Index in the problems array
     }
 
     // State variables
@@ -294,7 +295,8 @@ contract Core {
             title: problem.getTitle(),
             contentUri: problem.getContentUri(),
             gasLimit: problem.getGasLimit(),
-            judgeAddress: problem.getBondJudgeAddress()
+            judgeAddress: problem.getBondJudgeAddress(),
+            index: index
         });
     }
 
@@ -313,7 +315,8 @@ contract Core {
                 title: problem.getTitle(),
                 contentUri: problem.getContentUri(),
                 gasLimit: problem.getGasLimit(),
-                judgeAddress: problem.getBondJudgeAddress()
+                judgeAddress: problem.getBondJudgeAddress(),
+                index: i
             });
         }
         

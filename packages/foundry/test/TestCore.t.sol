@@ -143,6 +143,7 @@ contract TestCore is Test {
         assertEq(problemInfo.gasLimit, PROBLEM_GAS_LIMIT);
         assertEq(problemInfo.judgeAddress, address(judge));
         assertEq(uint(problemInfo.problemType), uint(Problem.ProblemType.TRADITIONAL));
+        assertEq(problemInfo.index, problemIndex);
     }
 
     function testRegisterMultipleProblems() public {
@@ -174,6 +175,8 @@ contract TestCore is Test {
         assertEq(allProblems[1].contentUri, "Another Content URI");
         assertEq(allProblems[1].gasLimit, 500000);
         assertEq(uint(allProblems[1].problemType), uint(Problem.ProblemType.INTERACTIVE));
+        assertEq(allProblems[0].index, 0);
+        assertEq(allProblems[1].index, 1);
     }
 
     function testInvalidJudgeAddress() public {
@@ -328,5 +331,6 @@ contract TestCore is Test {
         assertEq(problemInfo.gasLimit, PROBLEM_GAS_LIMIT);
         assertEq(problemInfo.judgeAddress, address(judge));
         assertEq(uint(problemInfo.problemType), uint(Problem.ProblemType.TRADITIONAL));
+        assertEq(problemInfo.index, problemIndex);
     }
 }
