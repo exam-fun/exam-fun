@@ -3,12 +3,12 @@
 import { useState, use } from "react";
 import { useUserInfo } from "~~/hooks/contracts/core";
 
-export default function UserDetail(props: { params: Promise<{ id: string }> }) {
+export default function UserDetail(props: { params: Promise<{ address: string }> }) {
   const params = use(props.params);
   const [buyAmount, setBuyAmount] = useState<string>("100");
   const [sellAmount, setSellAmount] = useState<string>("");
 
-  const { data: userInfo, isPending, error } = useUserInfo({ userAddress: params.id });
+  const { data: userInfo, isPending, error } = useUserInfo({ userAddress: params.address });
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -37,7 +37,7 @@ export default function UserDetail(props: { params: Promise<{ id: string }> }) {
                 <div className="border rounded px-10 py-1 text-xl">{userInfo?.username}</div>
                 <div className="border rounded px-10 py-1 text-xl ">$ {userInfo?.tokenTicker}</div>
               </div>
-              <div className="border rounded px-20 py-1 text-xl">{params.id}</div>
+              <div className="border rounded px-20 py-1 text-xl">{params.address}</div>
             </div>
           </div>
           <div className="text-right">
