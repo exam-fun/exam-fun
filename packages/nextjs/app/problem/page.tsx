@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRegisterProblem } from "~~/hooks/contracts/core";
 
 export default function CreateQuestion() {
   const [formData, setFormData] = useState({
@@ -9,11 +11,24 @@ export default function CreateQuestion() {
     gasLimit: "",
     judgeAddress: "",
   });
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { registerProblem } = useRegisterProblem();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 这里添加提交逻辑
-    console.log("题目信息：", formData);
+
+    await registerProblem({
+      problemType: 2,
+      title: formData.title,
+      contentUri: formData.contentUri,
+      gasLimit: BigInt(formData.gasLimit),
+      judgeAddress: formData.judgeAddress,
+    });
+
+    console.log("Transaction executed successfully");
+
+    router.push(`/submit`);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

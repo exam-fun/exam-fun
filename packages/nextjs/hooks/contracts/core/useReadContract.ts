@@ -1,5 +1,5 @@
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
-import { SubmissionRecord, User } from "~~/types/contracts/core";
+import { ProblemInfo, SubmissionRecord, User } from "~~/types/contracts/core";
 
 export const useSubmissionCount = () => {
     const { data, isPending, error } = useScaffoldReadContract({
@@ -76,7 +76,7 @@ export const useProblem = ({
         functionName: "getProblem",
         args: [problemIndex]
     })
-    return { data, isPending, error }
+    return { data: data ? data as ProblemInfo : undefined, isPending, error }
 }
 
 export const useAllProblems = () => {
@@ -84,5 +84,9 @@ export const useAllProblems = () => {
         contractName: "Core",
         functionName: "getAllProblems",
     })
-    return { data, isPending, error }
+    return {
+        data: data ? data.map((d) => d as ProblemInfo) : undefined,
+        isPending,
+        error,
+    }
 }

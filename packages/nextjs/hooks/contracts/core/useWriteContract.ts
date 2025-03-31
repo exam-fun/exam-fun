@@ -70,7 +70,7 @@ export const useRegisterProblem = () => {
         title: string;
         contentUri: string;
         gasLimit: bigint;
-        judgeAddress: `0x${string}`;
+        judgeAddress: string;
     }) => {
         console.log("Executing registerProblem");
         console.table({ problemType, title, contentUri, gasLimit, judgeAddress });

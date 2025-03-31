@@ -134,14 +134,15 @@ contract TestCore is Test {
         assertEq(core.getProblemCount(), 1);
 
         // Verify problem address
-        assertEq(core.getProblem(problemIndex), problemAddress);
+        Core.ProblemInfo memory problemInfo = core.getProblem(problemIndex);
+        assertEq(problemInfo.problemAddress, problemAddress);
 
         // Verify problem details
-        Problem problem = Problem(problemAddress);
-        assertEq(problem.getTitle(), PROBLEM_TITLE);
-        assertEq(problem.getContentUri(), PROBLEM_CONTENT_URI);
-        assertEq(problem.getGasLimit(), PROBLEM_GAS_LIMIT);
-        assertEq(problem.getBondJudgeAddress(), address(judge));
+        assertEq(problemInfo.title, PROBLEM_TITLE);
+        assertEq(problemInfo.contentUri, PROBLEM_CONTENT_URI);
+        assertEq(problemInfo.gasLimit, PROBLEM_GAS_LIMIT);
+        assertEq(problemInfo.judgeAddress, address(judge));
+        assertEq(uint(problemInfo.problemType), uint(Problem.ProblemType.TRADITIONAL));
     }
 
     function testRegisterMultipleProblems() public {
@@ -163,10 +164,16 @@ contract TestCore is Test {
         assertEq(problem2Index, 1);
 
         // Verify getAllProblems
-        address[] memory allProblems = core.getAllProblems();
+        Core.ProblemInfo[] memory allProblems = core.getAllProblems();
         assertEq(allProblems.length, 2);
-        assertEq(allProblems[0], problemAddress);
-        assertEq(allProblems[1], problem2Address);
+        assertEq(allProblems[0].problemAddress, problemAddress);
+        assertEq(allProblems[1].problemAddress, problem2Address);
+        
+        // Verify second problem details
+        assertEq(allProblems[1].title, "Another Problem");
+        assertEq(allProblems[1].contentUri, "Another Content URI");
+        assertEq(allProblems[1].gasLimit, 500000);
+        assertEq(uint(allProblems[1].problemType), uint(Problem.ProblemType.INTERACTIVE));
     }
 
     function testInvalidJudgeAddress() public {
@@ -314,7 +321,12 @@ contract TestCore is Test {
         core.getProblem(999);
 
         // Get valid problem
-        address retrievedProblemAddress = core.getProblem(problemIndex);
-        assertEq(retrievedProblemAddress, problemAddress);
+        Core.ProblemInfo memory problemInfo = core.getProblem(problemIndex);
+        assertEq(problemInfo.problemAddress, problemAddress);
+        assertEq(problemInfo.title, PROBLEM_TITLE);
+        assertEq(problemInfo.contentUri, PROBLEM_CONTENT_URI);
+        assertEq(problemInfo.gasLimit, PROBLEM_GAS_LIMIT);
+        assertEq(problemInfo.judgeAddress, address(judge));
+        assertEq(uint(problemInfo.problemType), uint(Problem.ProblemType.TRADITIONAL));
     }
 }

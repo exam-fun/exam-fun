@@ -17,3 +17,12 @@ export interface SubmissionRecord {
     timestamp: bigint;
     additionalInfo: string;
 }
+
+export interface ProblemInfo {
+    problemAddress: string;
+    problemType: number;
+    title: string;
+    contentUri: string;
+    gasLimit: bigint;
+    judgeAddress: string;
+}

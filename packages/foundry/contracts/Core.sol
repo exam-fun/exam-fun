@@ -29,6 +29,16 @@ contract Core {
         string additionalInfo;
     }
 
+    // Define a struct to hold problem information
+    struct ProblemInfo {
+        address problemAddress;
+        Problem.ProblemType problemType;
+        string title;
+        string contentUri;
+        uint256 gasLimit;
+        address judgeAddress;
+    }
+
     // State variables
     mapping(address => User) public users;
     address[] public registeredUsers;
@@ -272,22 +282,41 @@ contract Core {
     /**
      * @dev Get problem by index
      * @param index Index of the problem
-     * @return Problem contract address
+     * @return Problem information including contract address and details
      */
-    function getProblem(uint256 index) external view returns (address) {
+    function getProblem(uint256 index) external view returns (ProblemInfo memory) {
         require(index < problems.length, "Core: Invalid problem index");
-        return address(problems[index]);
+        Problem problem = problems[index];
+        
+        return ProblemInfo({
+            problemAddress: address(problem),
+            problemType: problem.s_problemType(),
+            title: problem.getTitle(),
+            contentUri: problem.getContentUri(),
+            gasLimit: problem.getGasLimit(),
+            judgeAddress: problem.getBondJudgeAddress()
+        });
     }
 
     /**
      * @dev Get all registered problems
-     * @return Array of problem addresses
+     * @return Array of problem information including addresses and details
      */
-    function getAllProblems() external view returns (address[] memory) {
-        address[] memory problemAddresses = new address[](problems.length);
+    function getAllProblems() external view returns (ProblemInfo[] memory) {
+        ProblemInfo[] memory problemInfos = new ProblemInfo[](problems.length);
+        
         for (uint256 i = 0; i < problems.length; i++) {
-            problemAddresses[i] = address(problems[i]);
+            Problem problem = problems[i];
+            problemInfos[i] = ProblemInfo({
+                problemAddress: address(problem),
+                problemType: problem.s_problemType(),
+                title: problem.getTitle(),
+                contentUri: problem.getContentUri(),
+                gasLimit: problem.getGasLimit(),
+                judgeAddress: problem.getBondJudgeAddress()
+            });
         }
-        return problemAddresses;
+        
+        return problemInfos;
     }
 }

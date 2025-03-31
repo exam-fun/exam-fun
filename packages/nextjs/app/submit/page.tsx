@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAllProblems } from "~~/hooks/contracts/core";
 import { useScaffoldContract } from "~~/hooks/scaffold-eth";
 
 // 定义测试结果类型
@@ -17,12 +18,7 @@ export default function Submit() {
   // 模拟测试结果
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
-  // 模拟题目列表数据
-  const questions = [
-    { address: "0x0001", title: "题目1" },
-    { address: "0x0002", title: "题目2" },
-    { address: "0x0003", title: "题目3" },
-  ];
+  const { data: problems, isPending: problemsPending, error: problemsError } = useAllProblems();
 
   // 模拟测试过程
   const runTests = async () => {
@@ -41,6 +37,9 @@ export default function Submit() {
     e.preventDefault();
     await runTests();
   };
+
+  if (problemsPending) return <div>Loading...</div>;
+  if (problemsError) return <div>Error: {problemsError.message}</div>
 
   // 获取状态对应的样式
   const getStatusStyle = (status: TestResult["status"]) => {
@@ -63,20 +62,21 @@ export default function Submit() {
         <div className="w-1/3 bg-[#009828] rounded-lg p-6 shadow-md">
           <h2 className="text-4xl font-bold mb-4 text-black">题目列表</h2>
           <div className="space-y-3">
-            {questions.map(question => (
-              <div
-                key={question.address}
-                className={`flex items-center gap-2 p-3 text-black rounded-lg cursor-pointer hover:bg-green-500
-                                    ${selectedQuestion === question.title ? "bg-green-500" : ""}`}
-                onClick={() => setSelectedQuestion(question.title)}
-              >
+            {
+              problems?.map(problem => (
                 <div
-                  className={`w-4 h-4 rounded-full border text-black
-                                    ${selectedQuestion === question.title ? "bg-green-500 border-green-500" : "border-green-500"}`}
-                />
-                <span className="text-2xl">{question.title}</span>
-              </div>
-            ))}
+                  key={problem.problemAddress}
+                  className={`flex items-center gap-2 p-3 text-black rounded-lg cursor-pointer hover:bg-green-500
+                                    ${selectedQuestion === problem.title ? "bg-green-500" : ""}`}
+                  onClick={() => setSelectedQuestion(problem.title)}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full border text-black
+                                    ${selectedQuestion === problem.title ? "bg-green-500 border-green-500" : "border-green-500"}`}
+                  />
+                  <span className="text-2xl">{problem.title}</span>
+                </div>
+              ))}
           </div>
         </div>
 
