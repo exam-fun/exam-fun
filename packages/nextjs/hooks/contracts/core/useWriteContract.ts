@@ -1,7 +1,7 @@
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 export const useRegisterUser = () => {
-    const { writeContractAsync } = useScaffoldWriteContract({
+    const { writeContractAsync, data, isPending, error } = useScaffoldWriteContract({
         contractName: "Core",
     });
 
@@ -25,31 +25,63 @@ export const useRegisterUser = () => {
         console.log("Transaction executed successfully");
     };
 
-    return { registerUser };
+    return { registerUser, data, isPending, error };
 }
 
 export const useRequestEvaluation = () => {
-    const { writeContractAsync } = useScaffoldWriteContract({
+    const { writeContractAsync, data, isPending, error } = useScaffoldWriteContract({
         contractName: "Core",
     });
 
     const requestEvaluation = async ({
-        problemAddress,
+        problemIndex,
         answerAddress,
     }: {
-        problemAddress: `0x${string}`;
+        problemIndex: bigint;
         answerAddress: `0x${string}`;
     }) => {
         console.log("Executing requestEvaluation");
-        console.table({ problemAddress, answerAddress });
+        console.table({ problemIndex, answerAddress });
 
         await writeContractAsync({
             functionName: "requestEvaluation",
-            args: [problemAddress, answerAddress],
+            args: [problemIndex, answerAddress],
         });
 
         console.log("Transaction executed successfully");
     };
 
-    return { requestEvaluation };
+    return { requestEvaluation, data, isPending, error };
+}
+
+export const useRegisterProblem = () => {
+    const { writeContractAsync, data, isPending, error } = useScaffoldWriteContract({
+        contractName: "Core",
+    });
+
+    const registerProblem = async ({
+        problemType,
+        title,
+        contentUri,
+        gasLimit,
+        judgeAddress,
+    }: {
+        problemType: number;
+        title: string;
+        contentUri: string;
+        gasLimit: bigint;
+        judgeAddress: `0x${string}`;
+    }) => {
+        console.log("Executing registerProblem");
+        console.table({ problemType, title, contentUri, gasLimit, judgeAddress });
+
+        await writeContractAsync({
+            functionName: "registerProblem",
+            args: [problemType, title, contentUri, gasLimit, judgeAddress],
+        });
+
+        console.log("Transaction executed successfully");
+    };
+
+    return { registerProblem, data, isPending, error };
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useScaffoldContract } from "~~/hooks/scaffold-eth";
 
 // 定义测试结果类型
 type TestResult = {
@@ -11,16 +12,16 @@ type TestResult = {
 
 export default function Submit() {
   const [selectedQuestion, setSelectedQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [answerAddr, setAnswerAddr] = useState("");
   const [showTestResult, setShowTestResult] = useState(false);
   // 模拟测试结果
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
   // 模拟题目列表数据
   const questions = [
-    { id: 1, title: "题目1" },
-    { id: 2, title: "题目2" },
-    { id: 3, title: "题目3" },
+    { address: "0x0001", title: "题目1" },
+    { address: "0x0002", title: "题目2" },
+    { address: "0x0003", title: "题目3" },
   ];
 
   // 模拟测试过程
@@ -64,7 +65,7 @@ export default function Submit() {
           <div className="space-y-3">
             {questions.map(question => (
               <div
-                key={question.id}
+                key={question.address}
                 className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer hover:bg-gray-100 
                                     ${selectedQuestion === question.title ? "bg-gray-100" : ""}`}
                 onClick={() => setSelectedQuestion(question.title)}
@@ -94,10 +95,10 @@ export default function Submit() {
             <div>
               <h2 className="text-xl font-bold mb-4">回答区域：</h2>
               <textarea
-                value={answer}
-                onChange={e => setAnswer(e.target.value)}
+                value={answerAddr}
+                onChange={e => setAnswerAddr(e.target.value)}
                 className="w-full min-h-[200px] p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="请在这里输入你的答案..."
+                placeholder="请在这里输入你的答案地址"
               />
             </div>
 

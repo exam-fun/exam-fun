@@ -36,6 +36,9 @@ contract Core {
     SubmissionRecord[] public submissions;
     mapping(address => uint256[]) public userSubmissions; // user address => submission indices
 
+    // Problem registry
+    Problem[] public problems;
+
     // Events
     event UserRegistered(
         address indexed userAddress,
@@ -53,6 +56,11 @@ contract Core {
         address answerAddress,
         Judge.JudgeState result,
         uint256 gasUsage
+    );
+    event ProblemRegistered(
+        address indexed problemAddress,
+        address indexed judgeAddress,
+        uint256 indexed problemIndex
     );
 
     // Modifiers
@@ -92,21 +100,56 @@ contract Core {
     }
 
     /**
+     * @dev Register a Problem and bind a judge to it
+     * @param problemType Type of the problem (TRADITIONAL, INTERACTIVE)
+     * @param title Title of the problem
+     * @param contentUri URI pointing to the problem content
+     * @param gasLimit Gas limit for the problem
+     * @param judgeAddress Address of the judge contract
+     * @return problemAddress Address of the created problem contract
+     * @return problemIndex Index of the registered problem
+     */
+    function registerProblem(
+        Problem.ProblemType problemType,
+        string memory title,
+        string memory contentUri,
+        uint256 gasLimit,
+        address judgeAddress
+    ) external returns (address problemAddress, uint256 problemIndex) {
+        require(judgeAddress != address(0), "Core: Invalid judge address");
+
+        // Create a new Problem contract
+        Problem problem = new Problem(problemType, title, contentUri, gasLimit);
+        problemAddress = address(problem);
+
+        // Bind the judge to the problem
+        problem.bindJudge(judgeAddress);
+
+        // Add the problem to the list
+        problems.push(problem);
+        problemIndex = problems.length - 1;
+
+        emit ProblemRegistered(problemAddress, judgeAddress, problemIndex);
+
+        return (problemAddress, problemIndex);
+    }
+
+    /**
      * @dev Request evaluation of a solution
-     * @param problemAddress Address of the problem contract
+     * @param problemIndex Index of the problem in the problems array
      * @param answerAddress Address of the solution contract
      */
     function requestEvaluation(
-        address problemAddress,
+        uint256 problemIndex,
         address answerAddress
-    ) external onlyRegisteredUser {
-        require(problemAddress != address(0), "Core: Invalid problem address");
+    ) external onlyRegisteredUser returns (SubmissionRecord memory) {
+        require(problemIndex < problems.length, "Core: Invalid problem index");
         require(answerAddress != address(0), "Core: Invalid answer address");
 
-        emit SubmissionRequested(msg.sender, problemAddress, answerAddress);
+        Problem problem = problems[problemIndex];
+        address problemAddress = address(problem);
 
-        // Call the problem contract to evaluate the solution
-        Problem problem = Problem(problemAddress);
+        emit SubmissionRequested(msg.sender, problemAddress, answerAddress);
 
         // Store submission record before actual submission to track attempts
         uint256 submissionIndex = submissions.length;
@@ -140,6 +183,8 @@ contract Core {
                 submission.judgeResult.judgeState,
                 submission.judgeResult.gasUsed
             );
+
+            return record;
         } catch {
             // If submission fails, record it as a runtime error
             SubmissionRecord memory record = SubmissionRecord({
@@ -162,6 +207,8 @@ contract Core {
                 Judge.JudgeState.RUNTIME_ERROR,
                 0
             );
+
+            return record;
         }
     }
 
@@ -212,5 +259,35 @@ contract Core {
         address userAddress
     ) external view returns (uint256[] memory) {
         return userSubmissions[userAddress];
+    }
+
+    /**
+     * @dev Get total number of registered problems
+     * @return Number of problems
+     */
+    function getProblemCount() external view returns (uint256) {
+        return problems.length;
+    }
+
+    /**
+     * @dev Get problem by index
+     * @param index Index of the problem
+     * @return Problem contract address
+     */
+    function getProblem(uint256 index) external view returns (address) {
+        require(index < problems.length, "Core: Invalid problem index");
+        return address(problems[index]);
+    }
+
+    /**
+     * @dev Get all registered problems
+     * @return Array of problem addresses
+     */
+    function getAllProblems() external view returns (address[] memory) {
+        address[] memory problemAddresses = new address[](problems.length);
+        for (uint256 i = 0; i < problems.length; i++) {
+            problemAddresses[i] = address(problems[i]);
+        }
+        return problemAddresses;
     }
 }

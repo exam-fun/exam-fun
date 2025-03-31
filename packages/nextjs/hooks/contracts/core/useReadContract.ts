@@ -55,3 +55,34 @@ export const useUserSubmissionIndices = ({
     })
     return { data, isPending, error }
 }
+
+// New hooks for Problem functionality
+
+export const useProblemCount = () => {
+    const { data, isPending, error } = useScaffoldReadContract({
+        contractName: "Core",
+        functionName: "getProblemCount",
+    })
+    return { data, isPending, error }
+}
+
+export const useProblem = ({
+    problemIndex
+}: {
+    problemIndex: bigint;
+}) => {
+    const { data, isPending, error } = useScaffoldReadContract({
+        contractName: "Core",
+        functionName: "getProblem",
+        args: [problemIndex]
+    })
+    return { data, isPending, error }
+}
+
+export const useAllProblems = () => {
+    const { data, isPending, error } = useScaffoldReadContract({
+        contractName: "Core",
+        functionName: "getAllProblems",
+    })
+    return { data, isPending, error }
+}
